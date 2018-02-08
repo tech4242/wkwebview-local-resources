@@ -10,6 +10,7 @@ import UIKit
 import WebKit
 
 class ViewController: UIViewController, WKNavigationDelegate {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let webView = WKWebView()
@@ -25,6 +26,21 @@ class ViewController: UIViewController, WKNavigationDelegate {
         webView.navigationDelegate = self
         view = webView
     }
+    
+    /*
+     Alternative solution with webView.loadFileURL():
+     
+     override func viewDidLoad() {
+     super.viewDidLoad()
+     let webView = WKWebView()
+     let htmlPath = Bundle.main.path(forResource: "index", ofType: "html")
+     let htmlUrl = URL(fileURLWithPath: htmlPath!, isDirectory: false)
+     webView.loadFileURL(htmlUrl, allowingReadAccessTo: htmlUrl)
+     webView.navigationDelegate = self
+     view = webView
+     }
+     */
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
