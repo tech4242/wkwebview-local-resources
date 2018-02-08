@@ -14,6 +14,7 @@
 		99BABCC3202C7DC5006FFC7B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 99BABCC1202C7DC5006FFC7B /* LaunchScreen.storyboard */; };
 		99BABCCD202C7DFA006FFC7B /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 99BABCCC202C7DFA006FFC7B /* index.html */; };
 		99BABCCF202C7E2C006FFC7B /* styles.css in Resources */ = {isa = PBXBuildFile; fileRef = 99BABCCE202C7E2C006FFC7B /* styles.css */; };
+		99BABCD2202C8138006FFC7B /* test.js in Resources */ = {isa = PBXBuildFile; fileRef = 99BABCD1202C8138006FFC7B /* test.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		99BABCC4202C7DC5006FFC7B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		99BABCCC202C7DFA006FFC7B /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		99BABCCE202C7E2C006FFC7B /* styles.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = styles.css; sourceTree = "<group>"; };
+		99BABCD1202C8138006FFC7B /* test.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = test.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 		99BABCCA202C7DD9006FFC7B /* web */ = {
 			isa = PBXGroup;
 			children = (
+				99BABCD0202C80AF006FFC7B /* js */,
 				99BABCCB202C7DE5006FFC7B /* css */,
 				99BABCCC202C7DFA006FFC7B /* index.html */,
 			);
@@ -84,6 +87,14 @@
 				99BABCCE202C7E2C006FFC7B /* styles.css */,
 			);
 			path = css;
+			sourceTree = "<group>";
+		};
+		99BABCD0202C80AF006FFC7B /* js */ = {
+			isa = PBXGroup;
+			children = (
+				99BABCD1202C8138006FFC7B /* test.js */,
+			);
+			path = js;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -145,6 +156,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99BABCD2202C8138006FFC7B /* test.js in Resources */,
 				99BABCC3202C7DC5006FFC7B /* LaunchScreen.storyboard in Resources */,
 				99BABCCD202C7DFA006FFC7B /* index.html in Resources */,
 				99BABCC0202C7DC5006FFC7B /* Assets.xcassets in Resources */,

@@ -13,7 +13,15 @@ class ViewController: UIViewController, WKNavigationDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let webView = WKWebView()
+        
+        // enable JavaScript via config
+        let preferences = WKPreferences()
+        preferences.javaScriptEnabled = true
+        let configuration = WKWebViewConfiguration()
+        configuration.preferences = preferences
+        
+        // setup webView with config and load local HTML file
+        let webView = WKWebView(frame: view.bounds, configuration: configuration)
         let htmlPath = Bundle.main.path(forResource: "index", ofType: "html")
         let folderPath = Bundle.main.bundlePath
         let baseUrl = URL(fileURLWithPath: folderPath, isDirectory: true)
