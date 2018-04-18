@@ -8,8 +8,24 @@
 
 import UIKit
 import WebKit
+import Alamofire
+import Zip
 
 class ViewController: UIViewController, WKNavigationDelegate {
+    
+    /*
+     Used to download and unzip the zip file with the custom CSS, JS
+     */
+    func downloadFile() {
+        let destinationURL = DownloadRequest.suggestedDownloadDestination(for: .documentDirectory)
+        let downloadURL = "https://www.github.com/tech4242/wkwebview-local-resources/custom_css_js.zip"
+        let downloadParameters : Parameters = ["":""]
+        
+        Alamofire.download(downloadURL, method: .get, parameters: downloadParameters, encoding: JSONEncoding.default, to: destinationURL)
+            .response { response in
+                print(response)
+            }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
