@@ -1,0 +1,6 @@
+framework module Pods_LocalWKWebView {
+  umbrella header "Pods-LocalWKWebView-umbrella.h"
+
+  export *
+  module * { export * }
+}
