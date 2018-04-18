@@ -23,30 +23,36 @@ class ViewController: UIViewController, WKNavigationDelegate {
             print(fileURL)
             return (fileURL, [.removePreviousFile, .createIntermediateDirectories])
         }
-        let downloadURL = "https://github.com/tech4242/wkwebview-local-resources/blob/master/custom_css_js.zip"
+        let downloadURL = "https://github.com/tech4242/wkwebview-local-resources/raw/master/custom_css_js.zip"
         let downloadParameters : Parameters = ["":""]
         
         Alamofire.download(downloadURL, method: .get, parameters: downloadParameters, encoding: JSONEncoding.default, to: destination)
             .downloadProgress { progress in
                 print("Download Progress: \(progress.fractionCompleted)")
             }
-            .response { response in
-                print("HTTP Code: \(String(describing: response.response?.statusCode))")
-                do {
-                    let fm = FileManager.default
-                    let documentsURL = try! fm.url(for:.documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-                    let fileURL = documentsURL.appendingPathComponent("custom_css_js.zip")
-                    print(fileURL)
-                    print(documentsURL)
+            .response(completionHandler: { (DefaultDownloadResponse) in
+                if DefaultDownloadResponse.response?.statusCode == 200 {
                     
-                    try Zip.unzipFile(fileURL, destination: documentsURL, overwrite: true, password: "", progress: { (progress) -> () in
-                        print(progress)
-                    })
+                    print(DefaultDownloadResponse.destinationURL)
+                    
+                    do {
+                        let fm = FileManager.default
+                        let documentsURL = try! fm.url(for:.documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+                        let fileURL = documentsURL.appendingPathComponent("custom_css_js.zip")
+                        print(fileURL)
+                        
+                        if(fm.fileExists(atPath: fileURL.absoluteString)) {
+                            print("File exists at \(fileURL.absoluteString)!")
+                        }
+                        try Zip.unzipFile(fileURL, destination: documentsURL, overwrite: true, password: "", progress: { (progress) -> () in
+                            print(progress)
+                        })
+                    }
+                    catch {
+                        print("Couldn't unzip")
+                    }
                 }
-                catch {
-                    print("Something went wrong")
-                }
-            }
+            })
     }
     
     override func viewDidLoad() {
