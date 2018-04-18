@@ -17,19 +17,41 @@ class ViewController: UIViewController, WKNavigationDelegate {
      Used to download and unzip the zip file with the custom CSS, JS
      */
     func downloadFile() {
-        let destinationURL = DownloadRequest.suggestedDownloadDestination(for: .documentDirectory)
-        let downloadURL = "https://www.github.com/tech4242/wkwebview-local-resources/custom_css_js.zip"
+        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let fileURL = documentsURL.appendingPathComponent("custom_css_js.zip")
+            print(fileURL)
+            return (fileURL, [.removePreviousFile, .createIntermediateDirectories])
+        }
+        let downloadURL = "https://github.com/tech4242/wkwebview-local-resources/blob/master/custom_css_js.zip"
         let downloadParameters : Parameters = ["":""]
         
-        Alamofire.download(downloadURL, method: .get, parameters: downloadParameters, encoding: JSONEncoding.default, to: destinationURL)
+        Alamofire.download(downloadURL, method: .get, parameters: downloadParameters, encoding: JSONEncoding.default, to: destination)
+            .downloadProgress { progress in
+                print("Download Progress: \(progress.fractionCompleted)")
+            }
             .response { response in
-                print(response)
+                print("HTTP Code: \(String(describing: response.response?.statusCode))")
+                do {
+                    let fm = FileManager.default
+                    let documentsURL = try! fm.url(for:.documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+                    let fileURL = documentsURL.appendingPathComponent("custom_css_js.zip")
+                    print(fileURL)
+                    print(documentsURL)
+                    
+                    try Zip.unzipFile(fileURL, destination: documentsURL, overwrite: true, password: "", progress: { (progress) -> () in
+                        print(progress)
+                    })
+                }
+                catch {
+                    print("Something went wrong")
+                }
             }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        downloadFile()
         // enable JavaScript via config
         let preferences = WKPreferences()
         preferences.javaScriptEnabled = true
