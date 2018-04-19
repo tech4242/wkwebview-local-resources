@@ -72,16 +72,13 @@ class ViewController: UIViewController, WKNavigationDelegate {
                     let folderURL = url?.deletingPathExtension()
                     let htmlPath = folderURL?.appendingPathComponent("custom.html").path
                     let folderPath = folderURL?.path
+                    print(folderPath)
                     let baseUrl = URL(fileURLWithPath: folderPath!, isDirectory: true)
-                    
-                    do {
-                        let htmlString = try NSString(contentsOfFile: htmlPath!, encoding: String.Encoding.utf8.rawValue)
-                        webView.loadHTMLString(htmlString as String, baseURL: baseUrl)
-                        webView.navigationDelegate = self
-                        self.view = webView
-                    } catch {
-                        // error handling
-                    }
+                    print(baseUrl)
+                    let htmlURL = URL(fileURLWithPath: htmlPath!, isDirectory: false)
+                    webView.loadFileURL(htmlURL, allowingReadAccessTo: folderURL!)
+                    webView.navigationDelegate = self
+                    self.view = webView
                 } else {
                     print(error)
                 }
