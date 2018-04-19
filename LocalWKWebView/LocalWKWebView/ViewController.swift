@@ -16,11 +16,10 @@ class ViewController: UIViewController, WKNavigationDelegate {
     /*
      Used to download and unzip the zip file with the custom CSS, JS
      */
-    func downloadFile() {
+    func downloadFile(completionHandler: @escaping (URL?, Error?) -> ()) {
         let destination: DownloadRequest.DownloadFileDestination = { _, _ in
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let fileURL = documentsURL.appendingPathComponent("custom_css_js.zip")
-            print(fileURL)
             return (fileURL, [.removePreviousFile, .createIntermediateDirectories])
         }
         let downloadURL = "https://github.com/tech4242/wkwebview-local-resources/raw/master/custom_css_js.zip"
@@ -33,23 +32,22 @@ class ViewController: UIViewController, WKNavigationDelegate {
             .response(completionHandler: { (DefaultDownloadResponse) in
                 if DefaultDownloadResponse.response?.statusCode == 200 {
                     
-                    print(DefaultDownloadResponse.destinationURL)
+                    let fm = FileManager.default
+                    let documentsURL = try! fm.url(for:.documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+                    let fileURL = documentsURL.appendingPathComponent("custom_css_js.zip")
                     
-                    do {
-                        let fm = FileManager.default
-                        let documentsURL = try! fm.url(for:.documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-                        let fileURL = documentsURL.appendingPathComponent("custom_css_js.zip")
-                        print(fileURL)
-                        
-                        if(fm.fileExists(atPath: fileURL.path)) {
-                            print("File exists at \(fileURL.absoluteString)!")
+                    if(fm.fileExists(atPath: fileURL.path)) {
+                        print("Download complete at: \(fileURL.absoluteString)")
+                        do {
+                            try Zip.unzipFile(fileURL, destination: documentsURL, overwrite: true, password: "", progress: { (progress) -> () in
+                                print("Unzip Progress: \(progress)")
+                            })
+                            completionHandler(fileURL, nil)
                         }
-                        try Zip.unzipFile(fileURL, destination: documentsURL, overwrite: true, password: "", progress: { (progress) -> () in
-                            print(progress)
-                        })
-                    }
-                    catch {
-                        print("Couldn't unzip")
+                        catch {
+                            print("Couldn't unzip")
+                            completionHandler(nil, error)
+                        }
                     }
                 }
             })
@@ -57,7 +55,17 @@ class ViewController: UIViewController, WKNavigationDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        downloadFile()
+        
+        // download custom files
+        downloadFile(completionHandler: { url, error in
+            if(url != nil) {
+                print(url?.deletingPathExtension())
+            } else {
+                print(error)
+            }
+        })
+        
+        
         // enable JavaScript via config
         let preferences = WKPreferences()
         preferences.javaScriptEnabled = true
