@@ -41,7 +41,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
                         let fileURL = documentsURL.appendingPathComponent("custom_css_js.zip")
                         print(fileURL)
                         
-                        if(fm.fileExists(atPath: fileURL.absoluteString)) {
+                        if(fm.fileExists(atPath: fileURL.path)) {
                             print("File exists at \(fileURL.absoluteString)!")
                         }
                         try Zip.unzipFile(fileURL, destination: documentsURL, overwrite: true, password: "", progress: { (progress) -> () in
