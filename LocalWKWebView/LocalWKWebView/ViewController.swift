@@ -56,35 +56,50 @@ class ViewController: UIViewController, WKNavigationDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // download custom files
-        downloadFile(completionHandler: { url, error in
-            if(url != nil) {
-                print(url?.deletingPathExtension())
-            } else {
-                print(error)
-            }
-        })
-        
-        
-        // enable JavaScript via config
+        // enable JavaScript via config & setup webView
         let preferences = WKPreferences()
         preferences.javaScriptEnabled = true
         let configuration = WKWebViewConfiguration()
         configuration.preferences = preferences
-        
-        // setup webView with config and load local HTML file
         let webView = WKWebView(frame: view.bounds, configuration: configuration)
-        let htmlPath = Bundle.main.path(forResource: "index", ofType: "html")
-        let folderPath = Bundle.main.bundlePath
-        let baseUrl = URL(fileURLWithPath: folderPath, isDirectory: true)
-        do {
-            let htmlString = try NSString(contentsOfFile: htmlPath!, encoding: String.Encoding.utf8.rawValue)
-            webView.loadHTMLString(htmlString as String, baseURL: baseUrl)
-        } catch {
-            // catch error
+        
+        let loadCustomFiles = true
+        
+        if(loadCustomFiles) {
+            // download & load custom files from remote URL
+            downloadFile(completionHandler: { url, error in
+                if(url != nil) {
+                    let folderURL = url?.deletingPathExtension()
+                    let htmlPath = folderURL?.appendingPathComponent("custom.html").path
+                    let folderPath = folderURL?.path
+                    let baseUrl = URL(fileURLWithPath: folderPath!, isDirectory: true)
+                    
+                    do {
+                        let htmlString = try NSString(contentsOfFile: htmlPath!, encoding: String.Encoding.utf8.rawValue)
+                        webView.loadHTMLString(htmlString as String, baseURL: baseUrl)
+                        webView.navigationDelegate = self
+                        self.view = webView
+                    } catch {
+                        // error handling
+                    }
+                } else {
+                    print(error)
+                }
+            })
+        } else {
+            // load normal files from /web
+            let htmlPath = Bundle.main.path(forResource: "index", ofType: "html")
+            let folderPath = Bundle.main.bundlePath
+            let baseUrl = URL(fileURLWithPath: folderPath, isDirectory: true)
+            do {
+                let htmlString = try NSString(contentsOfFile: htmlPath!, encoding: String.Encoding.utf8.rawValue)
+                webView.loadHTMLString(htmlString as String, baseURL: baseUrl)
+                webView.navigationDelegate = self
+                self.view = webView
+            } catch {
+                // error handling
+            }
         }
-        webView.navigationDelegate = self
-        view = webView
     }
     
     /*
