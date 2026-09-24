@@ -22,3 +22,8 @@ button {
     background-color: #e5e5e5;
     color: #222;
 }
+
+#fetch-result {
+    margin-top: 24px;
+    font-size: 1rem;
+}

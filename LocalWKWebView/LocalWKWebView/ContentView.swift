@@ -24,6 +24,7 @@ struct ContentView: View {
     }
 
     @AppStorage("source") private var source = Source.bundled
+    @AppStorage("method") private var method = LoadingMethod.fileURL
     @State private var download = DownloadState.notStarted
 
     var body: some View {
@@ -35,11 +36,20 @@ struct ContentView: View {
             }
             .pickerStyle(.segmented)
             .labelsHidden()
+            .padding([.horizontal, .top])
+
+            Picker("Loading method", selection: $method) {
+                ForEach(LoadingMethod.allCases) { method in
+                    Text(method.rawValue).tag(method)
+                }
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
             .padding()
 
             switch source {
             case .bundled:
-                WebView(content: .bundled)
+                WebView(content: .bundled, method: method)
             case .downloaded:
                 downloadedContent
             }
@@ -58,7 +68,7 @@ struct ContentView: View {
             ProgressView("Downloading…")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         case .finished(let content):
-            WebView(content: content)
+            WebView(content: content, method: method)
         case .failed(let error):
             ContentUnavailableView {
                 Label("Download failed", systemImage: "exclamationmark.triangle")
