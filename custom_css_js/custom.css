@@ -1,5 +1,24 @@
+:root {
+    color-scheme: light dark;
+}
+
+body {
+    font-family: -apple-system, system-ui, sans-serif;
+    margin: 0;
+    padding: 24px;
+}
+
 #webkit-h1 {
-    font-size: 80px;
+    font-size: 3rem;
     color: coral;
-    margin-top: 50px;
+}
+
+button {
+    font: inherit;
+    font-size: 1.25rem;
+    padding: 16px 24px;
+    border: none;
+    border-radius: 12px;
+    background-color: #e5e5e5;
+    color: #222;
 }

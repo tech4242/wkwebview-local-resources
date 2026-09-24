@@ -9,7 +9,7 @@
 import Foundation
 import ZIPFoundation
 
-/// Downloads a zip with custom HTML, CSS and JS and unpacks it into Documents,
+/// Downloads a zip with custom HTML, CSS and JS and unpacks it into Application Support,
 /// so it can be loaded into the web view like any other local files.
 nonisolated enum RemoteContent {
     static let zipURL = URL(string: "https://github.com/tech4242/wkwebview-local-resources/raw/master/custom_css_js.zip")!
@@ -39,7 +39,7 @@ nonisolated enum RemoteContent {
         guard status == 200 else { throw Failure.badStatus(status) }
 
         let fileManager = FileManager.default
-        let destination = URL.documentsDirectory.appending(path: "remote", directoryHint: .isDirectory)
+        let destination = URL.applicationSupportDirectory.appending(path: "remote", directoryHint: .isDirectory)
         try? fileManager.removeItem(at: destination)
         try fileManager.createDirectory(at: destination, withIntermediateDirectories: true)
         try fileManager.unzipItem(at: zipFile, to: destination)
